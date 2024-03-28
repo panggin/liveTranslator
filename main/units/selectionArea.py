@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
-from PyQt5.QtCore import QEvent, Qt, QPoint, QRect
+from PyQt5.QtCore import QEvent, QObject, Qt, QPoint, QRect
 from PyQt5.QtGui import QPainter, QPen
 
 from overlayStyle import *
@@ -15,14 +15,13 @@ class SelectionArea(QMainWindow):
         self.enable_drawing = True # 범위 지정이 가능한지 여부를 나타내는 플래그
 
         # 화면 정보
-        self.limit_rect = QRect(100, 100, 600, 400) # 최대 화면 정보
-        # self.limit_rect = QApplication.desktop().availableGeometry() # 최대 화면 정보
+        # self.limit_rect = QRect(100, 47, 908, 687) # 최대 화면 정보
+        self.limit_rect = QApplication.desktop().availableGeometry() # 최대 화면 정보
         self.label_rect = None # 라벨 정보
 
         # 드래그 위치 정보
         self.start_pos = None  # 드래그 시작 위치를 저장하는 변수
         self.end_pos = None  # 드래그 끝 위치를 저장하는 변수
-
 
         # 윈도우의 특성 설정 (오버레이 창)
         self.setWindowFlags(Qt.Window | Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint)
@@ -105,9 +104,9 @@ class SelectionArea(QMainWindow):
         if event.type() == QEvent.KeyPress and event.key() == Qt.Key_R:
             print("selection area - press key R") # debugging
             self.close()
-            self.__init__()
+            self.__init__() # 초기화
             self.show()
-        return super().eventFilter(obj, event)
+        return False
 
     def setLabelGeometryWithGlobalRect(self, posRect):
         self.setGeometry(posRect)
