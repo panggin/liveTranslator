@@ -15,7 +15,8 @@ class SelectionArea(QMainWindow):
         self.enable_drawing = True # 범위 지정이 가능한지 여부를 나타내는 플래그
 
         # 화면 정보
-        self.desktop_rect = QApplication.desktop().availableGeometry() # 최대 화면 정보
+        self.limit_rect = QRect(100, 100, 600, 400) # 최대 화면 정보
+        # self.limit_rect = QApplication.desktop().availableGeometry() # 최대 화면 정보
         self.label_rect = None # 라벨 정보
 
         # 드래그 위치 정보
@@ -34,18 +35,17 @@ class SelectionArea(QMainWindow):
         self.label.setText("Set window position by dragging")
 
         # 오버레이 창 위치 및 크기 설정
-        self.setLabelGeometryWithGlobalRect(self.desktop_rect)
+        self.setLabelGeometryWithGlobalRect(self.limit_rect)
 
         # 이벤트 필터 등록
         self.installEventFilter(self)
-
 
     
     def paintEvent(self, event):
         # 드래그 중인 경우에만 사각형을 그립니다.
         if self.dragging and self.enable_drawing:
             painter = QPainter(self)
-            painter.setPen(QPen(Qt.green, 2, Qt.SolidLine))
+            painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
             rect = QRect(self.start_pos, self.end_pos)
             painter.drawRect(rect)
 
@@ -60,7 +60,11 @@ class SelectionArea(QMainWindow):
     # 마우스 이동 이벤트 처리
     def mouseMoveEvent(self, event):
         if self.enable_drawing and self.dragging:
-            self.end_pos = event.pos()
+            currPos = event.pos()
+            if 0 <= currPos.x() <= self.limit_rect.width():
+                self.end_pos.setX(currPos.x())
+            if 0 <= currPos.y() <= self.limit_rect.height():
+                self.end_pos.setY(currPos.y())
             print(self.end_pos) # debugging
             self.update()
 
@@ -79,6 +83,7 @@ class SelectionArea(QMainWindow):
             startPos, endPos = QPoint(self.start_pos), QPoint(self.end_pos)
             print(startPos, endPos) # debugging
 
+            # 시작점을 왼쪽 위, 끝점을 오른쪽 아래로 맞출 것
             if startPos.x() > endPos.x():
                 self.start_pos.setX(endPos.x())
                 self.end_pos.setX(startPos.x())
@@ -133,9 +138,9 @@ class SelectionArea(QMainWindow):
         print("----------------------------")
 
 
-# # 디버깅을 위한 메인함수
-# if __name__ == "__main__":
-#     app = QApplication(sys.argv)    
-#     overlay = SelectionArea()
-#     overlay.show()
-#     sys.exit(app.exec_())
+# 디버깅을 위한 메인함수
+if __name__ == "__main__":
+    app = QApplication(sys.argv)    
+    overlay = SelectionArea()
+    overlay.show()
+    sys.exit(app.exec_())
