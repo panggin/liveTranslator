@@ -15,8 +15,8 @@ class SelectionArea(QMainWindow):
         self.enable_drawing = True # 범위 지정이 가능한지 여부를 나타내는 플래그
 
         # 화면 정보
-        self.desktop_geometry = QApplication.desktop().availableGeometry() # 최대 화면 정보
-        self.label_geometry = None # 라벨 정보
+        self.desktop_rect = QApplication.desktop().availableGeometry() # 최대 화면 정보
+        self.label_rect = None # 라벨 정보
 
         # 드래그 위치 정보
         self.start_pos = None  # 드래그 시작 위치를 저장하는 변수
@@ -34,13 +34,11 @@ class SelectionArea(QMainWindow):
         self.label.setText("Set window position by dragging")
 
         # 오버레이 창 위치 및 크기 설정
-        self.setLabelGeometryWithGlobalRect(self.desktop_geometry)
+        self.setLabelGeometryWithGlobalRect(self.desktop_rect)
 
         # 이벤트 필터 등록
         self.installEventFilter(self)
 
-        # 오버레이 창 배치
-        self.show()
 
     
     def paintEvent(self, event):
@@ -59,11 +57,11 @@ class SelectionArea(QMainWindow):
             self.end_pos = event.pos()
             self.printDragPos('mouse press') # debugging
 
-
     # 마우스 이동 이벤트 처리
     def mouseMoveEvent(self, event):
         if self.enable_drawing and self.dragging:
             self.end_pos = event.pos()
+            print(self.end_pos) # debugging
             self.update()
 
     # 마우스 릴리스 이벤트 처리
@@ -76,9 +74,23 @@ class SelectionArea(QMainWindow):
             self.enable_drawing = False
             
             self.printDragPos('drag complete') # debugging
+            self.start_pos = self.mapToGlobal(self.start_pos)
+            self.end_pos = self.mapToGlobal(self.end_pos)
+            startPos, endPos = QPoint(self.start_pos), QPoint(self.end_pos)
+            print(startPos, endPos) # debugging
 
-            globalDragRect = QRect(self.mapToGlobal(self.start_pos), self.mapToGlobal(self.end_pos))
-            self.setLabelGeometryWithGlobalRect(globalDragRect)
+            if startPos.x() > endPos.x():
+                self.start_pos.setX(endPos.x())
+                self.end_pos.setX(startPos.x())
+
+            if startPos.y() > endPos.y():
+                self.start_pos.setY(endPos.y())
+                self.end_pos.setY(startPos.y())
+
+            print(self.start_pos, self.end_pos) # debugging
+            print(QRect(self.start_pos, self.end_pos)) # debugging
+            
+            self.setLabelGeometryWithGlobalRect(QRect(self.start_pos, self.end_pos))
             self.label.setText("This is selection area")
 
         self.resetDragInfo()
@@ -86,15 +98,16 @@ class SelectionArea(QMainWindow):
     # 이벤트 필터
     def eventFilter(self, obj, event):
         if event.type() == QEvent.KeyPress and event.key() == Qt.Key_R:
-            print("press key R") # debugging
+            print("selection area - press key R") # debugging
             self.close()
             self.__init__()
+            self.show()
         return super().eventFilter(obj, event)
 
     def setLabelGeometryWithGlobalRect(self, posRect):
         self.setGeometry(posRect)
-        self.label.setGeometry(0, 0, posRect.width(), posRect.height())
-        self.label_geometry = self.frameGeometry()
+        self.label.setGeometry(0, 0, abs(posRect.width()), abs(posRect.height()))
+        self.label_rect = self.frameGeometry()
         print('window : ', self.frameGeometry()) #
         print('label : ', self.label.frameGeometry()) #
         self.update()
@@ -124,4 +137,5 @@ class SelectionArea(QMainWindow):
 # if __name__ == "__main__":
 #     app = QApplication(sys.argv)    
 #     overlay = SelectionArea()
+#     overlay.show()
 #     sys.exit(app.exec_())
