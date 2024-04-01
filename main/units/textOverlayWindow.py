@@ -13,7 +13,7 @@ class TextOverlayWindow(SelectionArea):
 
         self.limit_rect = limitRect # 입력한 값으로 범위 제한 재설정
         self.setLabelGeometryWithGlobalRect(self.limit_rect)
-        
+    
 
     # 마우스 클릭 이벤트 처리
     def mousePressEvent(self, event):
@@ -59,10 +59,11 @@ class TextOverlayWindow(SelectionArea):
             self.close()
             self.__init__(self.limit_rect) # 초기화
             self.show()
-        if event.type() == QEvent.KeyPress and event.key() == Qt.Key_F: # 창 최종 결정
+        if event.type() == QEvent.KeyPress and event.key() == Qt.Key_F: # 창 크기 고정
             print("press key F") # debugging
             self.lock_resize = True
             self.enable_moving = True
+            self.enable_drawing = False
             self.label.setStyleSheet(default_style)
         return False # 부모 클래스로 이벤트 전달X
     

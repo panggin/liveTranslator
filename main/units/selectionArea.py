@@ -42,7 +42,7 @@ class SelectionArea(QMainWindow):
     
     def paintEvent(self, event):
         # 드래그 중인 경우에만 사각형을 그립니다.
-        if self.dragging and self.enable_drawing:
+        if self.enable_drawing and self.dragging:
             painter = QPainter(self)
             painter.setPen(QPen(Qt.green, 3, Qt.SolidLine))
             rect = QRect(self.start_pos, self.end_pos)
@@ -107,6 +107,7 @@ class SelectionArea(QMainWindow):
             self.__init__() # 초기화
             self.show()
         return False
+        # return super().eventFilter(obj, event)
 
     def setLabelGeometryWithGlobalRect(self, posRect):
         self.setGeometry(posRect)
@@ -138,8 +139,8 @@ class SelectionArea(QMainWindow):
 
 
 # 디버깅을 위한 메인함수
-if __name__ == "__main__":
-    app = QApplication(sys.argv)    
-    overlay = SelectionArea()
-    overlay.show()
-    sys.exit(app.exec_())
+# if __name__ == "__main__":
+#     app = QApplication(sys.argv)    
+#     overlay = SelectionArea()
+#     overlay.show()
+#     sys.exit(app.exec_())
