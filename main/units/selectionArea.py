@@ -1,4 +1,5 @@
 import sys
+
 from PyQt5.QtWidgets import QApplication, QMainWindow, QLabel
 from PyQt5.QtCore import QEvent, QObject, Qt, QPoint, QRect
 from PyQt5.QtGui import QPainter, QPen
@@ -15,9 +16,8 @@ class SelectionArea(QMainWindow):
         self.enable_drawing = True # 범위 지정이 가능한지 여부를 나타내는 플래그
 
         # 화면 정보
-        # self.limit_rect = QRect(100, 47, 908, 687) # 최대 화면 정보
-        self.limit_rect = QApplication.desktop().availableGeometry() # 최대 화면 정보
-        self.label_rect = None # 라벨 정보
+        self.limit_rect = QApplication.desktop().availableGeometry() # 초기 선택 가능 범위
+        self.label_rect = None # 라벨 위치 정보
 
         # 드래그 위치 정보
         self.start_pos = None  # 드래그 시작 위치를 저장하는 변수
@@ -93,7 +93,7 @@ class SelectionArea(QMainWindow):
 
             print(self.start_pos, self.end_pos) # debugging
             print(QRect(self.start_pos, self.end_pos)) # debugging
-            
+
             self.setLabelGeometryWithGlobalRect(QRect(self.start_pos, self.end_pos))
             self.label.setText("This is selection area")
 
@@ -107,20 +107,23 @@ class SelectionArea(QMainWindow):
             self.__init__() # 초기화
             self.show()
         return False
-        # return super().eventFilter(obj, event)
+    
+    def getLabelRect(self):
+        return self.label_rect
 
     def setLabelGeometryWithGlobalRect(self, posRect):
         self.setGeometry(posRect)
         self.label.setGeometry(0, 0, abs(posRect.width()), abs(posRect.height()))
         self.label_rect = self.frameGeometry()
+
         print('window : ', self.frameGeometry()) #
         print('label : ', self.label.frameGeometry()) #
+
         self.update()
 
     def resetDragInfo(self):
         self.start_pos = None
         self.end_pos = None
-        self.drag_info = [0,0,0,0]
     
     
     # 디버깅 함수
@@ -128,7 +131,6 @@ class SelectionArea(QMainWindow):
         print("----------------------------")
         print(f'{statusText} - start_pos : {self.start_pos}')
         print(f'{statusText} - end_pos : {self.end_pos}')
-        # print(f'{statusText} - drag_info : {QRect(self.start_pos, self.end_pos)}')
         print("----------------------------")
 
     def printFlags(self, statusText="result"):
