@@ -80,7 +80,8 @@ class TextOverlayWindow(SelectionArea):
         return False
     
     def setLabelText(self, text):
-        self.label.setText(text)
+        if text is not None:
+            self.label.setText(text)
 
     def setLimitRect(self, limitRect):
         self.limit_rect = limitRect

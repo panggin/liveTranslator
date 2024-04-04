@@ -44,11 +44,8 @@ class WindowCaptureHandler(QObject):
             if self.enable_capture_show :
                 cv.imshow('Window capture', screenshot) # 화면 확인
 
-            text = pytesseract.image_to_string(screenshot, lang='eng')
-            # print(f'extracting : {text}') # 추출한 텍스트 확인
-            if text is not None:
-                self.transText.emit(text)
-                self.printText(text)
+            text = self.get_text_and_translate(screenshot)
+            self.transText.emit(text)
 
             # debug the loop rate
             # print('FPS {}'.format(1 / (time() - loop_time))) # debugging
@@ -76,18 +73,16 @@ class WindowCaptureHandler(QObject):
         return screenshot[self.capture_y:self.capture_y+self.capture_height, 
                           self.capture_x:self.capture_x+self.capture_width]
     
-    def printText(self, text):
+    def get_text_and_translate(self, screenshot):
+        text = pytesseract.image_to_string(screenshot, lang='eng')
         print(f'extracting : {text}') # 추출한 텍스트 확인
+        if text is None:
+            return None
+
+        translator = Translator()
+        result = translator.translate(text, dest='ko').text
+        print(f'translated : {result}') # 추출한 텍스트 확인
+
+        return result
 
 
-
-# def trans(text):
-#     if text == '' : 
-#         return ''
-#     translator = Translator()
-#     result = translator.translate(text, dest='ko').text
-#     return result
-
-#     text = pytesseract.image_to_string(textImg, lang='eng')
-#         print(f'extracting : {text}') # 추출한 텍스트 확인
-#         result = trans(text)
