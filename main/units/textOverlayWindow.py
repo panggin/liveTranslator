@@ -18,8 +18,6 @@ class TextOverlayWindow(SelectionArea):
 
         if limitRect is not None:
             self.limit_rect = limitRect # 입력한 값으로 범위 제한 재설정
-        else:
-            self.limit_rect = QApplication.desktop().availableGeometry() # 초기 선택 가능 범위
 
         self.setLabelGeometryWithGlobalRect(self.limit_rect)
     
@@ -81,6 +79,8 @@ class TextOverlayWindow(SelectionArea):
 
         return False
     
+    def setLabelText(self, text):
+        self.label.setText(text)
 
     def setLimitRect(self, limitRect):
         self.limit_rect = limitRect

@@ -2,16 +2,16 @@ import sys
 
 import cv2 as cv
 from time import time
-from threading import *
 import numpy as np
 import Quartz as QZ
 from queue import Queue
 
-from PyQt5.QtCore import QRect, QEvent
+from PyQt5.QtCore import QRect, QEvent, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication
 
 from units.textOverlayWindow import TextOverlayWindow
 from units.winCaptureHandler import WindowCaptureHandler 
+
 
 
 if __name__ == "__main__":
@@ -29,5 +29,7 @@ if __name__ == "__main__":
     overlay.show()
 
     overlay.fKeyPressed.connect(wincapHandler.run_capture)
+    wincapHandler.transText.connect(overlay.setLabelText)
 
     sys.exit(app.exec_())
+

@@ -1,14 +1,19 @@
 import sys
 sys.path.append("main/units/windowCapture.py")
 
-from PyQt5.QtCore import QEvent, Qt, QPoint, QRect
+from PyQt5.QtCore import QObject, QEvent, Qt, QPoint, QRect, pyqtSignal
 import cv2 as cv
 from time import time
+
+import pytesseract
+from googletrans import Translator # 번역 기능 추가
 
 from windowCapture import WindowCapture
 
 
-class WindowCaptureHandler:
+class WindowCaptureHandler(QObject):
+
+    transText = pyqtSignal(str)
 
     # properties
     wincap = None # 화면 캡처 객체
@@ -22,6 +27,7 @@ class WindowCaptureHandler:
     capture_height = 0
 
     def __init__(self, given_window_name=None):
+        super().__init__()
         self.wincap = WindowCapture(given_window_name)
         self.wincap_rect = self.get_full_window_rect()
 
@@ -37,6 +43,12 @@ class WindowCaptureHandler:
 
             if self.enable_capture_show :
                 cv.imshow('Window capture', screenshot) # 화면 확인
+
+            text = pytesseract.image_to_string(screenshot, lang='eng')
+            # print(f'extracting : {text}') # 추출한 텍스트 확인
+            if text is not None:
+                self.transText.emit(text)
+                self.printText(text)
 
             # debug the loop rate
             # print('FPS {}'.format(1 / (time() - loop_time))) # debugging
@@ -63,3 +75,19 @@ class WindowCaptureHandler:
         screenshot = self.wincap.get_image_from_window()        
         return screenshot[self.capture_y:self.capture_y+self.capture_height, 
                           self.capture_x:self.capture_x+self.capture_width]
+    
+    def printText(self, text):
+        print(f'extracting : {text}') # 추출한 텍스트 확인
+
+
+
+# def trans(text):
+#     if text == '' : 
+#         return ''
+#     translator = Translator()
+#     result = translator.translate(text, dest='ko').text
+#     return result
+
+#     text = pytesseract.image_to_string(textImg, lang='eng')
+#         print(f'extracting : {text}') # 추출한 텍스트 확인
+#         result = trans(text)
