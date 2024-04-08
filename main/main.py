@@ -9,16 +9,19 @@ from queue import Queue
 from PyQt5.QtCore import QRect, QEvent, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication
 
-from units.textOverlayWindow import TextOverlayWindow
-from units.winCaptureHandler import WindowCaptureHandler 
+from liveTranslator.overlay.textOverlayWindow import TextOverlayWindow
+from liveTranslator.capture.winCaptureHandler import WindowCaptureHandler 
 
+
+def printEmit(data):
+    print('connect :', data)
 
 
 if __name__ == "__main__":
 
     app = QApplication(sys.argv)
 
-    wincapHandler = WindowCaptureHandler('Google')  # 캡쳐할 창의 이름 넣기
+    wincapHandler = WindowCaptureHandler('YouTube')  # 캡쳐할 창의 이름 넣기
     overlay = TextOverlayWindow()
 
     # 타겟 화면 크기 가져오기
@@ -28,8 +31,10 @@ if __name__ == "__main__":
     overlay.setLimitRect(winFullRect)
     overlay.show()
 
+    # overlay.fKeyPressed.connect(printEmit)
     overlay.fKeyPressed.connect(wincapHandler.run_capture)
     wincapHandler.transText.connect(overlay.setLabelText)
+    print('After Connect')
 
     sys.exit(app.exec_())
 
