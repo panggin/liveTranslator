@@ -9,32 +9,39 @@ from queue import Queue
 from PyQt5.QtCore import QRect, QEvent, pyqtSignal, pyqtSlot
 from PyQt5.QtWidgets import QApplication
 
+from liveTranslator.overlay.infoWindow import InfoWindow 
 from liveTranslator.overlay.textOverlayWindow import TextOverlayWindow
-from liveTranslator.capture.winCaptureHandler import WindowCaptureHandler 
+from liveTranslator.capture.wincapHandler import WindowCaptureHandler 
+
+from liveTranslator.capture.debug_wincapHandler import WindowCaptureHandlerForDebug # 디버깅
+
+from liveTranslator.overlay._emitTextThread import MyWindow, TextUpdateThread # 기능 테스트를 위한 일시적 추가
 
 
-def printEmit(data):
-    print('connect :', data)
+app = QApplication(sys.argv)
 
+infoWindow = InfoWindow()
+infoWindow.show()
 
-if __name__ == "__main__":
+windowName = infoWindow.get_text()
+# windowName = 'Google' # 디버깅 - 캡처할 창 이름 Google로 지정
+# wincapHandler = WindowCaptureHandler(windowName)  # 캡쳐할 창의 이름 넣기
+wincapHandler = WindowCaptureHandlerForDebug(windowName) # 디버깅을 위한 WindowCaptureHandler
+overlay = TextOverlayWindow()
 
-    app = QApplication(sys.argv)
+# 타겟 화면 크기 가져오기
+winFullRect = wincapHandler.get_full_window_rect()
 
-    wincapHandler = WindowCaptureHandler('YouTube')  # 캡쳐할 창의 이름 넣기
-    overlay = TextOverlayWindow()
+# 오버레이 화면 크기 설정 및 실행
+overlay.setLimitRect(winFullRect)
+overlay.show()
 
-    # 타겟 화면 크기 가져오기
-    winFullRect = wincapHandler.get_full_window_rect()
-    
-    # 오버레이 화면 크기 설정 및 실행
-    overlay.setLimitRect(winFullRect)
-    overlay.show()
+overlay.fKeyPressedToCap.connect(wincapHandler.start_capture) # F키 눌렀을 때 화면 캡처 시작
+overlay.fKeyPressedToInfo.connect(infoWindow.capInfoUI)
 
-    # overlay.fKeyPressed.connect(printEmit)
-    overlay.fKeyPressed.connect(wincapHandler.run_capture)
-    wincapHandler.transText.connect(overlay.setLabelText)
-    print('After Connect')
+infoWindow.styleSheetUpdated.connect(overlay.updateOverlay)
+wincapHandler.transText.connect(overlay.setLabelText) # 번역된 텍스트로 라벨 텍스트 설정
+print('After Connect')
 
-    sys.exit(app.exec_())
+sys.exit(app.exec_())
 
