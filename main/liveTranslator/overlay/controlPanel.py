@@ -87,6 +87,7 @@ class ControlPanel(QWidget):
 
 # ------------- 2. 번역 자막 배치 관련 레이아웃 ---------------------
 
+    @pyqtSlot()
     def overlayTextInfoUI(self):
         self.hideOverlayRangeInfoUI() # 1번 화면 숨기기
         self.showOverlayTextInfoUI()  # 2번 화면 표시
