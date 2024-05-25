@@ -26,11 +26,15 @@ class WindowCaptureHandlerForDebug(WindowCaptureHandler):
             if text == '': continue
             self.transText.emit(text)
 
+            self.printTransText(text)
             self.printFPS()
 
     @pyqtSlot(ndarray)
     def imshowFromImageEmit(self, screenshot:ndarray):
         cv.imshow('show capture area', screenshot) # 화면 확인
+
+    def printTransText(self, text):
+        print(f'Translated Text : {text}')
 
     def printFPS(self):
         # debug the loop rate
