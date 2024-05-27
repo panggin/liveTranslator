@@ -1,4 +1,5 @@
-import sys
+# liveTranslator/overlay/controlPanel.py
+
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QInputDialog, QColorDialog
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt
 
@@ -6,7 +7,7 @@ from .overlayStyle import *
 
 
 class ControlPanel(QWidget):
-    styleSheetUpdated = pyqtSignal()  # 스타일 변경 알림을 위한 시그널
+    styleSheetUpdated = pyqtSignal()  # 스타일 변경 알리는 시그널
 
     def __init__(self):
         super().__init__()
@@ -50,10 +51,10 @@ class ControlPanel(QWidget):
         self.button3.clicked.connect(lambda : self.set_color(StyleSheet.backgroundColor))
         self.layout.addWidget(self.button3)
 
-        # 배경 색상 변경 버튼 생성 및 레이아웃에 추가
-        self.button3 = QPushButton('배경 색상 변경')
-        self.button3.clicked.connect(lambda : self.set_color(StyleSheet.backgroundColor))
-        self.layout.addWidget(self.button3)
+        # 프로그램 종료 버튼 생성 및 레이아웃에 추가
+        self.button4 = QPushButton('프로그램 종료')
+        self.button4.clicked.connect(QApplication.quit)
+        self.layout.addWidget(self.button4)
 
         #-------------------------------------------------------------
         # 레이아웃 설정
@@ -96,11 +97,13 @@ class ControlPanel(QWidget):
         self.button1.hide()
         self.button2.hide()
         self.button3.hide()
+        self.button4.hide()
 
     def showOverlayTextInfoUI(self):
         self.button1.show()
         self.button2.show()
         self.button3.show()
+        self.button4.show()
 
     # 텍스트 크기 변경
     def set_text_size(self):
@@ -112,11 +115,11 @@ class ControlPanel(QWidget):
 
     # 텍스트 색상 변경 / 배경 색상 변경
     def set_color(self, target:Color):
-        color = QColorDialog.getColor() # 색상 대화 상자를 사용자로부터 색상 선택 받음
+        self.color = QColorDialog.getColor() # 색상 대화 상자를 사용자로부터 색상 선택 받음
 
         # 사용자가 색상을 선택한 경우에만 처리
-        if color.isValid():
-            target.red, target.green, target.blue = color.red(), color.green(), color.blue()
+        if self.color.isValid():
+            target.red, target.green, target.blue = self.color.red(), self.color.green(), self.color.blue()
             StyleSheet.update_style_sheet() # 오버레이 스타일시트 업데이트
             self.styleSheetUpdated.emit()
 
@@ -127,15 +130,4 @@ class ControlPanel(QWidget):
         self.userInput = None if self.userInput == '' else self.userInput
         return self.userInput
 
-
-# if __name__ == '__main__':
-#     app = QApplication(sys.argv)
-#     main_window = ControlPanel()
-#     main_window.show()
-
-#     # main_window.captureInfoUI()
-
-#     userInput = main_window.get_user_input()
-#     print('get input userInput:', userInput)
-#     sys.exit(app.exec_())
 
