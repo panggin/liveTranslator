@@ -6,7 +6,7 @@ class Color:
 
 
 class StyleSheet:
-    backgroundColor = Color(50,50,50)
+    backgroundColor = Color(100,100,100)
     textColor = Color(255,255,255)
     textSize = 16
 
