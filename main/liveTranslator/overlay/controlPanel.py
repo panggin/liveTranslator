@@ -52,7 +52,7 @@ class ControlPanel(QWidget):
         self.layout.addWidget(self.button3)
 
         # 프로그램 종료 버튼 생성 및 레이아웃에 추가
-        self.button4 = QPushButton('프로그램 종료')
+        self.button4 = QPushButton('프로그램 종료 (Q)')
         self.button4.clicked.connect(QApplication.quit)
         self.layout.addWidget(self.button4)
 
