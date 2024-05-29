@@ -34,6 +34,7 @@ class OverlayRangeWinForDebug(OverlayRangeWin):
             print(f'label_rect : {self.label_rect}')
 
 
+# 오버레이 영역 선택 창(OverlayRangeWin) 동작 확인
 if __name__ == '__main__':
     print(sys.path)
     

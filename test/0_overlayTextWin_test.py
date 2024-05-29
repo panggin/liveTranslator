@@ -71,7 +71,7 @@ class OverlayTextWinForDebug(OverlayTextWin):
         return super().updateOverlayStyle()
 
 
-
+# 오버레이 창(OverlayTextWin) 동작 확인
 if __name__ == '__main__':
     print(sys.path)
     

@@ -40,7 +40,7 @@ class ControlPanelForDebug(ControlPanel):
         print(f'transparent_style : {StyleSheet.transparent_style}')
 
 
-
+# 컨트롤 패널(ControlPanel) 동작 확인
 if __name__ == '__main__':
     print(sys.path)
     app = QApplication(sys.argv)
