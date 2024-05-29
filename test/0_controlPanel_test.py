@@ -1,3 +1,5 @@
+# test/0_controlPanel_test.py <- liveTranslator/control/controlPanel.py
+
 import sys
 from PyQt5.QtWidgets import QApplication
 from PyQt5.QtCore import QObject, QTimer, pyqtSignal, pyqtSlot

@@ -1,4 +1,4 @@
-# test/overlayRangeWinTest.py <- liveTranslator/overlay/overlayRangeWin.py
+# test/0_overlayRangeWin_test.py <- liveTranslator/overlay/overlayRangeWin.py
 
 import sys
 from PyQt5.QtWidgets import QApplication

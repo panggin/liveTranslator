@@ -1,4 +1,4 @@
-# test/overlayTextWinTest.py <- liveTranslator/overlay/overlayTextWin.py
+# test/0_overlayTextWin_test.py <- liveTranslator/overlay/overlayTextWin.py
 
 import sys
 import time
