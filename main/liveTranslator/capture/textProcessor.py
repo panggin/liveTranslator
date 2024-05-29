@@ -1,5 +1,6 @@
 # textProcessor.py
 
+import cv2 as cv
 from enum import Enum
 from copy import deepcopy
 from numpy import ndarray
@@ -39,8 +40,12 @@ class TextProcessor:
     
 
     def get_text_from_image(self, screenshot:ndarray):
+        screenshot = cv.cvtColor(screenshot, cv.COLOR_BGR2GRAY) # 그레이스케일 변환
+        _, screenshot = cv.threshold(screenshot, 0, 255, cv.THRESH_BINARY + cv.THRESH_OTSU) # 이진화
+        # cv.imshow('binary image', screenshot) # 이진화 이미지 확인
+        # cv.waitKey(0)
         text = pytesseract.image_to_string(screenshot, lang=self.lang)
-        # print(f'extracting : {text}') # 추출한 텍스트 확인
+        # print(f'extracted : {text}') # 추출한 텍스트 확인
         return text
 
     def get_translated_text(self, text:str):
