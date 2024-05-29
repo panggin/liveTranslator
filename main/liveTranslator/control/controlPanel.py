@@ -3,7 +3,7 @@
 from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QLabel, QPushButton, QInputDialog, QColorDialog
 from PyQt5.QtCore import pyqtSignal, pyqtSlot, Qt
 
-from .overlayStyle import *
+from ..overlay.overlayStyle import Color, StyleSheet
 
 
 class ControlPanel(QWidget):

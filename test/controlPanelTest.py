@@ -4,7 +4,7 @@ from PyQt5.QtCore import QObject, QTimer, pyqtSignal, pyqtSlot
 from time import sleep
 
 from path_liveTranslator import *
-from main.liveTranslator.overlay import ControlPanel
+from main.liveTranslator.control import ControlPanel
 from main.liveTranslator.overlay import StyleSheet
 
 

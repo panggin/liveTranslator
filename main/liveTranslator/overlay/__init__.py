@@ -4,5 +4,3 @@ from .overlayStyle import StyleSheet
 
 from .overlayRangeWin import OverlayRangeWin
 from .overlayTextWin import OverlayTextWin
-
-from .controlPanel import ControlPanel
