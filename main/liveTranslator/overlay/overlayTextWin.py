@@ -11,6 +11,7 @@ class OverlayTextWin(OverlayRangeWin):
 
     fKeyPressedToCap = pyqtSignal(QRect)  # F키가 눌렸음을 화면 캡처 스레드에 알리는 시그널
     fKeyPressedToCtrl = pyqtSignal()      # F키가 눌렸음을 컨트롤 패널에 알리는 시그널
+    applicationQuit = pyqtSignal()        # 프로그램 종료를 알리는 시그널
 
     def __init__(self, limitRect=None):
         super().__init__() # OverlayRangeWin.__init__() 호출
@@ -19,7 +20,7 @@ class OverlayTextWin(OverlayRangeWin):
         self.limit_rect = limitRect if limitRect is not None else self.limit_rect
         self.setLabelGeometryWithGlobalRect(self.limit_rect)
 
-        print('>>> init OverlayTextWindow')
+        print('overlay >>> init OverlayTextWindow') # debug
 
     def initFlag(self):
         super().initFlag()
@@ -42,14 +43,14 @@ class OverlayTextWin(OverlayRangeWin):
     def eventFilter(self, obj:QObject, event:QEvent):
         # R키 누름 - 창 크기 재조정
         if not self.lock_resize and event.type() == QEvent.KeyPress and event.key() == Qt.Key_R:
-            print('>>> press key R - reset overlay range')
+            print('overlay >>> press key R - reset overlay range') # debug
             self.initFlag() # 플래그 초기화
             self.setLabelGeometryWithGlobalRect(self.limit_rect)
             return True
 
         # F키 누름 - 창 크기 고정
         if not self.lock_resize and event.type() == QEvent.KeyPress and event.key() == Qt.Key_F:
-            print('>>> press key F - lock window size')
+            print('overlay >>> press key F - lock window size') # debug
             self.lock_resize = True
             self.enable_drawing = False
 
@@ -61,7 +62,8 @@ class OverlayTextWin(OverlayRangeWin):
 
         # Q키 누름 - 프로그램 종료
         if event.type() == QEvent.KeyPress and event.key() == Qt.Key_Q:
-            print('>>> press key Q - application exit')
+            print('overlay >>> press key Q - application exit') # debug
+            self.applicationQuit.emit()
             QApplication.quit()
             return True
         

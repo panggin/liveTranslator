@@ -26,20 +26,38 @@ class WindowCaptureHandler(QThread):
         self.wincap_rect = self.get_full_window_rect()
         self.textProcessor = TextProcessor(LANG.ENG)
 
+        self.threadRunning = False # 스레드 실행을 위한 플래그
+
+        print('capture >>> init WindowCaptureHandler') # debug
+
+
 # --------- 메인 로직 --------------
     @pyqtSlot(QRect)
     def start_capture(self, selectionRect:QRect):
+        print('capture >>> capture thread started') # debug
+
         self.set_capture_rect(selectionRect)
+        self.threadRunning = True
         self.start() # 아래 백그라운드 작업(run) 실행
 
     # 백그라운드 작업 - 실시간 캡처와 텍스트 추출 및 번역
     def run(self):
-        while True:
+        while self.threadRunning:
+            # print('capture >>> capture thread is running...') # debug
             screenshot = self.get_crop_image_from_window()
             text = self.textProcessor.emit_translated_text(screenshot)
 
             if text == '': continue
             self.transText.emit(text)
+
+    # 시그널 전달 받을 경우 스레드 종료
+    @pyqtSlot()
+    def quit_thread(self):
+        print('capture >> applicationQuit signal received') # debug
+        print('capture >> thread quit') # debug
+        self.threadRunning = False
+        self.quit()
+        self.wait()
 
 # --------- 서브 로직 --------------
     def set_capture_rect(self, selectionRect:QRect):

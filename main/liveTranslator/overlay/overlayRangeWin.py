@@ -14,7 +14,7 @@ class OverlayRangeWin(QMainWindow):
         self.initFlag()         # 플래그 초기화
         self.initRectAndPos()   # 위치 정보 초기화
         self.initUI()           # UI 구성 초기화
-        print('>>> init OverlayRangeWindow')
+        print('overlay >>> init OverlayRangeWindow') # debug
 
     def initFlag(self):
         self.dragging = False      # 드래그 중인지 확인하는 플래그
@@ -109,7 +109,7 @@ class OverlayRangeWin(QMainWindow):
             self.initFlag()
             self.initRectAndPos()
             self.setLabelGeometryWithGlobalRect(self.limit_rect)
-            print('>>> press key R - reset overlay range')
+            print('>>> press key R - reset overlay range') # debug
             return True
         return super().eventFilter(obj, event)
         
