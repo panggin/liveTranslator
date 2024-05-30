@@ -1,4 +1,5 @@
-# test/0_overlayRangeWin_test.py <- liveTranslator/overlay/overlayTextWin.py + liveTranslator/control/controlPanel.py
+# test/1_overlayTextWin_controlPanel_test.py 
+# <- liveTranslator/overlay/overlayTextWin.py + liveTranslator/control/controlPanel.py
 
 import sys
 import time
