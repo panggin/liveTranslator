@@ -69,6 +69,7 @@ if __name__ == '__main__':
     app = QApplication(sys.argv)
 
     windowName = input('캡처할 창 이름을 입력하세요 : ')
+    windowName = None if windowName == '' else windowName
     wincapHandler = WindowCaptureHandlerForDebug(windowName)
     signalHandler = SignalHandler(wincapHandler.wincap_rect)
     
