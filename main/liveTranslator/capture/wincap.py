@@ -1,4 +1,4 @@
-#windowCapture.py
+# liveTranslator/capture/wincap.py
 
 import numpy as np
 import Quartz as QZ
@@ -84,3 +84,5 @@ class WindowCapture:
 
         return final_output
     
+
+# origin code URL : https://stackoverflow.com/questions/75620398/live-opencv-window-capture-screenshot-on-macos-darwin-using-python
